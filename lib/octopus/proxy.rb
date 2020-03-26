@@ -340,6 +340,7 @@ module Octopus
 
       begin
         unless current_model && !current_model.allowed_shard?(shard)
+          self.current_slave_group = nil
           self.current_shard = shard
         end
         yield

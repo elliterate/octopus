@@ -529,6 +529,20 @@ describe Octopus::Model do
           expect(klass.find_by_name('Brazil')).to be_present
         end
       end
+
+      context 'when called while sharded' do
+        it 'uses the master shard' do
+          Octopus.using(:brazil) do
+            expect(User.find_by_name('Thiago')).to be_nil
+  
+            User.transaction do
+              expect(User.find_by_name('Thiago')).not_to be_nil
+            end
+  
+            expect(User.find_by_name('Thiago')).to be_nil
+          end
+        end
+      end
     end
 
     describe "#finder methods" do
